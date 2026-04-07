@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT Quick Notes – All Units</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: #222; font-size: 15px; line-height: 1.6; }
+  .top-bar { background: #1a237e; color: #fff; padding: 18px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .top-bar h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+  .top-bar .badge { background: #fff; color: #1a237e; font-size: 12px; font-weight: 700; border-radius: 20px; padding: 3px 12px; }
+  .nav {position: sticky; top: 68px; display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 24px; background: #e8eaf6; border-bottom: 2px solid #c5cae9; z-index: 999999;}
+  .nav a { color: #1a237e; text-decoration: none; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: #fff; border: 1.5px solid #c5cae9; transition: background 0.15s; }
+  .nav a:hover { background: #1a237e; color: #fff; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; }
+  .unit { background: #fff; border-radius: 12px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); overflow: hidden; }
+  .unit-header { padding: 16px 24px; display: flex; align-items: center; gap: 14px; }
+  .unit-num { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .unit-header h2 { font-size: 18px; font-weight: 700; }
+  .unit-header .sub { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+  .unit-body { padding: 0 24px 20px; }
+  .section { margin-bottom: 18px; }
+  .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; padding: 4px 10px; border-radius: 6px; display: inline-block; }
+  ul { padding-left: 18px; }
+  ul li { margin-bottom: 5px; font-size: 14px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .card { background: #f8f9ff; border: 1.5px solid #e0e3f0; border-radius: 9px; padding: 12px 14px; }
+  .card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 2px 8px; margin: 2px 2px 2px 0; }
+  .divider { border: none; border-top: 1.5px solid #e8eaf6; margin: 14px 0; }
+  code { background: #eef0ff; color: #1a237e; border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 13px; }
+  .highlight { background: #fff8e1; border-left: 4px solid #f9a825; padding: 8px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13.5px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th { background: #e8eaf6; color: #1a237e; font-weight: 700; padding: 7px 10px; text-align: left; }
+  td { padding: 6px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .prog { background: #1e272e; color: #a8ff78; font-family: monospace; font-size: 12px; border-radius: 8px; padding: 12px 16px; margin: 8px 0; white-space: pre; overflow-x: auto; line-height: 1.5; }
+
+  /* Unit colors */
+  .u1 .unit-header { background: #e3f2fd; }
+  .u1 .unit-num { background: #1565c0; }
+  .u1 .section-title { background: #e3f2fd; color: #1565c0; }
+  .u2 .unit-header { background: #e8f5e9; }
+  .u2 .unit-num { background: #2e7d32; }
+  .u2 .section-title { background: #e8f5e9; color: #2e7d32; }
+  .u3 .unit-header { background: #fce4ec; }
+  .u3 .unit-num { background: #ad1457; }
+  .u3 .section-title { background: #fce4ec; color: #ad1457; }
+  .u4 .unit-header { background: #fff3e0; }
+  .u4 .unit-num { background: #e65100; }
+  .u4 .section-title { background: #fff3e0; color: #e65100; }
+  .u5 .unit-header { background: #f3e5f5; }
+  .u5 .unit-num { background: #6a1b9a; }
+  .u5 .section-title { background: #f3e5f5; color: #6a1b9a; }
+  .u6 .unit-header { background: #e0f7fa; }
+  .u6 .unit-num { background: #00695c; }
+  .u6 .section-title { background: #e0f7fa; color: #00695c; }
+  .u78 .unit-header { background: #fafafa; }
+  .u78 .unit-num { background: #37474f; }
+  .u78 .section-title { background: #eceff1; color: #37474f; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>⚡ IoT Quick Notes – All Units</h1>
+  <span class="badge">EXAM READY</span>
+  <span style="font-size:13px;opacity:0.8;">CE605D-N &nbsp;|&nbsp; Chapter 1–8</span>
+</div>
+
+<div class="nav">
+  <a href="#u1">Ch1: Intro</a>
+  <a href="#u2">Ch2: IoT Architecture</a>
+  <a href="#u3">Ch3: Networks</a>
+  <a href="#u4">Ch4: Web Infrastructure</a>
+  <a href="#u5">Ch5: Challenges</a>
+  <a href="#u6">Ch6: Domain Apps</a>
+  <a href="#u78">Ch7&8: Dev Tools</a>
+</div>
+
+<div class="container">
+
+<!-- ===================== CHAPTER 1 ===================== -->
+<div class="unit u1" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">1</div>
+    <div>
+      <h2>Introduction to IoT</h2>
+      <div class="sub">Definition · Characteristics · Physical & Logical Design · Protocols · IoT Levels</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">Definition</div>
+      <div class="highlight">IoT = A dynamic global network infrastructure with self-configuring capabilities based on standard and interoperable communication protocols, where physical and virtual "things" have identities, physical attributes, and virtual personalities and use intelligent interfaces.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Characteristics of IoT</div>
+      <div class="grid2">
+        <div class="card"><h4>Dynamic &amp; Self-Adapting</h4>Devices adapt to changing contexts.</div>
+        <div class="card"><h4>Self-Configuring</h4>Devices configure themselves automatically.</div>
+        <div class="card"><h4>Interoperable Protocols</h4>Communicate across different standards.</div>
+        <div class="card"><h4>Unique Identity</h4>Each device has a unique ID (IP/URI).</div>
+        <div class="card"><h4>Integrated into Information Network</h4>Seamlessly part of the internet.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Physical Design of IoT – Device Interfaces</div>
+      <div class="grid2">
+        <ul>
+          <li>I/O interfaces for sensors &amp; actuators</li>
+          <li>Internet connectivity interfaces</li>
+          <li>Memory &amp; storage interfaces (NAND/NOR, SD, MMC)</li>
+          <li>Audio/Video interfaces (HDMI, 3.5mm, RCA)</li>
+        </ul>
+        <ul>
+          <li>Connectivity: USB Host, RJ45/Ethernet</li>
+          <li>Processor: CPU, GPU</li>
+          <li>I/O: UART, SPI, I2C, CAN</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">IoT Protocols (Layered)</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Layer</th><th>Protocols</th></tr>
+          <tr><td>Link</td><td>802.3 (Ethernet), 802.11 (WiFi), 802.16 (WiMax), 802.15.4 (LR-WPAN), 2G/3G/4G</td></tr>
+          <tr><td>Network/Internet</td><td>IPv4, IPv6, 6LoWPAN</td></tr>
+          <tr><td>Transport</td><td>TCP, UDP</td></tr>
+          <tr><td>Application</td><td>HTTP, CoAP, WebSocket, MQTT, XMPP, DDS, AMQP</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Logical Design of IoT</div>
+      <p style="font-size:13.5px;margin-bottom:8px;">Abstract representation of entities and processes. IoT functional blocks:</p>
+      <div class="grid3">
+        <div class="card"><h4>Application</h4>User interface</div>
+        <div class="card"><h4>Services</h4>Data services</div>
+        <div class="card"><h4>Security</h4>Auth &amp; encryption</div>
+        <div class="card"><h4>Management</h4>Device management</div>
+        <div class="card"><h4>Communication</h4>Data transfer</div>
+        <div class="card"><h4>Device</h4>Hardware/sensors</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Communication Models</div>
+      <div class="grid2">
+        <div class="card"><h4>Request-Response</h4>Client sends request → Server responds. (HTTP/REST). Stateless.</div>
+        <div class="card"><h4>Publish-Subscribe</h4>Publishers → Broker manages topics → Consumers subscribe. (MQTT)</div>
+        <div class="card"><h4>Push-Pull</h4>Producers push data to queues → Consumers pull. Queues act as buffers.</div>
+        <div class="card"><h4>Exclusive Pair</h4>Bidirectional, full-duplex, persistent connection. Client closes. (WebSocket)</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">REST vs WebSocket APIs</div>
+      <div class="grid2">
+        <div class="card"><h4>REST API</h4>HTTP Commands: GET, PUT, POST, DELETE. Payload: JSON/XML. Follows Request-Response model.</div>
+        <div class="card"><h4>WebSocket API</h4>Bidirectional full-duplex. Initial HTTP handshake → persistent WebSocket connection. Follows Exclusive Pair model.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">IoT System Components</div>
+      <ul>
+        <li><strong>Device</strong> – Sensing, actuating, remote monitoring</li>
+        <li><strong>Resource</strong> – Software for accessing/processing sensor data</li>
+        <li><strong>Controller Service</strong> – Runs on device, interacts with web services</li>
+        <li><strong>Database</strong> – Local or cloud storage</li>
+        <li><strong>Web Service</strong> – REST or WebSocket service linking all components</li>
+        <li><strong>Analysis Component</strong> – Analyzes IoT data, generates readable results</li>
+        <li><strong>Application</strong> – User interface for monitoring and control</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">IoT Levels (Deployment Templates)</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Level</th><th>Nodes</th><th>Analysis</th><th>Storage</th><th>Use Case</th></tr>
+          <tr><td><strong>Level 1</strong></td><td>Single</td><td>Local</td><td>Local</td><td>Low-cost, low-complexity, small data</td></tr>
+          <tr><td><strong>Level 2</strong></td><td>Single</td><td>Local</td><td>Cloud</td><td>Big data, simple analysis</td></tr>
+          <tr><td><strong>Level 3</strong></td><td>Single</td><td>Cloud</td><td>Cloud</td><td>Big data, intensive analysis</td></tr>
+          <tr><td><strong>Level 4</strong></td><td>Multiple</td><td>Local + Cloud</td><td>Cloud</td><td>Multiple nodes, observer nodes present</td></tr>
+          <tr><td><strong>Level 5</strong></td><td>Multiple + Coordinator</td><td>Cloud</td><td>Cloud</td><td>WSN-based, coordinator collects &amp; forwards</td></tr>
+          <tr><td><strong>Level 6</strong></td><td>Multiple Independent</td><td>Cloud (Centralized)</td><td>Cloud</td><td>Centralized controller, max scale</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 2 ===================== -->
+<div class="unit u2" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">2</div>
+    <div>
+      <h2>IoT Architecture &amp; M2M Communication</h2>
+      <div class="sub">IoT Architecture layers · M2M · SDN · Cloud · Fog</div>
+    </div>
+  </div>
+  <div class="unit-body">
+    <div class="section">
+      <div class="section-title">IoT Architecture (3-Layer)</div>
+      <div class="grid3">
+        <div class="card"><h4>Perception Layer</h4>Physical layer – sensors, RFID, actuators. Collects data from environment.</div>
+        <div class="card"><h4>Network Layer</h4>Transmits data via internet, cloud, Wi-Fi, Bluetooth, 3G/4G.</div>
+        <div class="card"><h4>Application Layer</h4>Delivers application-specific services to user (Smart Home, Healthcare, etc.).</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">5-Layer Architecture</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Layer</th><th>Function</th></tr>
+          <tr><td>Business Layer</td><td>Manages business models, graphs, and user privacy</td></tr>
+          <tr><td>Application Layer</td><td>Smart services (smart home, smart health)</td></tr>
+          <tr><td>Processing (Middleware)</td><td>Stores, analyzes, and processes data; database &amp; cloud computing</td></tr>
+          <tr><td>Transport Layer</td><td>Transfers data between perception and processing layers (WiFi, 3G, LAN)</td></tr>
+          <tr><td>Perception Layer</td><td>Sensors and actuators collecting physical data</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">M2M (Machine to Machine)</div>
+      <ul>
+        <li>Direct communication between machines without human intervention</li>
+        <li>Uses wired (Ethernet) or wireless (Wi-Fi, cellular) networks</li>
+        <li>Key components: sensors, RFID, Wi-Fi/cellular connection, autonomic computing</li>
+        <li>Applications: Smart metering, fleet management, remote monitoring</li>
+        <li>Difference from IoT: M2M = point-to-point; IoT = broader ecosystem with cloud &amp; analytics</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Cloud Computing in IoT</div>
+      <div class="grid3">
+        <div class="card"><h4>IaaS</h4>Infrastructure as a Service – virtual machines, storage</div>
+        <div class="card"><h4>PaaS</h4>Platform as a Service – development platforms</div>
+        <div class="card"><h4>SaaS</h4>Software as a Service – apps over internet</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Fog Computing (Edge Computing)</div>
+      <ul>
+        <li>Processing done closer to IoT devices (at the "edge") rather than in the cloud</li>
+        <li>Reduces latency, bandwidth usage, and dependency on cloud</li>
+        <li>Useful for real-time applications</li>
+        <li>Fog = between device and cloud</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">SDN (Software Defined Networking) in IoT</div>
+      <ul>
+        <li>Separates control plane from data plane</li>
+        <li>Central controller manages network behavior</li>
+        <li>Makes IoT networks more flexible, programmable, and manageable</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 3 ===================== -->
+<div class="unit u3" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">3</div>
+    <div>
+      <h2>Networks &amp; Communication Aspects</h2>
+      <div class="sub">Wireless Issues · MAC · WSN · Unicast/Multicast · RTS/CTS</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">Wireless Medium Access Issues</div>
+      <div class="grid3">
+        <div class="card">
+          <h4>1. Half Duplex Operation</h4>
+          One party communicates at a time. During transmission, signal leakage prevents simultaneous reception. Collision detection by sender is impossible.
+        </div>
+        <div class="card">
+          <h4>2. Time-Varying Channel</h4>
+          Three mechanisms:<br>
+          • <strong>Reflection</strong> – wave hits large object<br>
+          • <strong>Diffraction</strong> – wave bends around sharp edges<br>
+          • <strong>Scattering</strong> – wave passes through objects smaller than wavelength
+        </div>
+        <div class="card">
+          <h4>3. Burst Channel Errors</h4>
+          Contiguous sequence of erroneous symbols. First &amp; last symbol have errors. Bit error rate in wireline = 10⁻³.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">MAC Protocol Types</div>
+      <div class="grid2">
+        <div class="card"><h4>Contention-Based (Random Access)</h4>CSMA/CD, CSMA/CA, ALOHA. Nodes compete for channel.</div>
+        <div class="card"><h4>Contention-Free (Scheduled)</h4>TDMA, FDMA, CDMA. Time/frequency/code slots assigned.</div>
+        <div class="card"><h4>Ad Hoc MAC</h4>Nodes communicate peer-to-peer. Each node also acts as router. More robust against failure.</div>
+        <div class="card"><h4>Channelization Protocol</h4>Bandwidth shared in time (TDMA), frequency (FDMA), or code (CDMA).</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">WSN (Wireless Sensor Network)</div>
+      <ul>
+        <li>Infrastructure-less wireless network deployed with sensors in ad-hoc manner</li>
+        <li>Sensor nodes have onboard processors + connect to Base Station</li>
+        <li>Deployed in remote/hazardous locations for unattended operations</li>
+      </ul>
+      <div class="grid2" style="margin-top:10px;">
+        <div class="card">
+          <h4>Components of WSN</h4>
+          <ul>
+            <li><strong>Sensors</strong> – capture environmental data</li>
+            <li><strong>Radio Nodes</strong> – microcontroller + transceiver + memory</li>
+            <li><strong>WLAN Access Point</strong> – receives wireless data</li>
+            <li><strong>Evaluation Software</strong> – processes &amp; presents data</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>WSN Characteristics</h4>
+          <ul>
+            <li>Resource constrained (battery-powered)</li>
+            <li>Data-centric communication</li>
+            <li>Application specific design</li>
+            <li>Node failure &amp; unreliable communication</li>
+            <li>Scalable &amp; densely deployable</li>
+            <li>Dynamic topologies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">WSN Applications &amp; Challenges</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>Applications</h4>
+          IoT, Surveillance, Environmental monitoring, Noise level, Medical/patient monitoring, Agriculture, Landslide Detection
+        </div>
+        <div class="card">
+          <h4>Challenges</h4>
+          QoS, Security, Energy Efficiency, Network Throughput, Performance, Node failure handling, Cross-layer optimization, Scalability
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Unicast vs Multicast</div>
+      <div class="grid2">
+        <div class="card"><h4>Unicast</h4>One-to-one. Single sender → single recipient. Most common form of data transfer. E.g. 10.1.4.0 → 20.14.4.2</div>
+        <div class="card"><h4>Multicast</h4>One-to-many or many-to-many. Sender → multiple targeted receivers simultaneously. Reduces bandwidth vs sending individual copies. Different from broadcast (broadcast = all nodes).</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">RTS / CTS (Flow Control)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>RTS/CTS – Request to Send / Clear to Send</h4>
+          DTE (host) sends <strong>RTS</strong> → "I want to send data"<br>
+          DCE (modem) replies <strong>CTS</strong> → "Go ahead, send"<br>
+          Prevents collision in shared wireless channel.
+        </div>
+        <div class="card">
+          <h4>DTR/DSR – Data Terminal Ready / Data Set Ready</h4>
+          DTE sends <strong>DTR</strong> → "I am ready to communicate"<br>
+          DCE sends <strong>DSR</strong> → "I am ready"<br>
+          Used to establish communication channel.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Data Aggregation &amp; Dissemination</div>
+      <ul>
+        <li><strong>Data Aggregation</strong> – Combining data from multiple sensors to reduce redundancy and save bandwidth</li>
+        <li><strong>Data Dissemination</strong> – Spreading information/commands from base station to sensor nodes</li>
+        <li>Key for energy efficiency in WSN</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 4 ===================== -->
+<div class="unit u4" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">4</div>
+    <div>
+      <h2>Web Infrastructure for Managing IoT Resources</h2>
+      <div class="sub">IoT Management · Lifecycle · Scheduling · Device/Cloud Collaboration</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">IoT System Management</div>
+      <ul>
+        <li>Manages connected devices, their data, and services across the IoT ecosystem</li>
+        <li>Uses OpenIoT architecture for IoT/Cloud convergence</li>
+        <li>Handles provisioning, monitoring, configuration, updates, and decommissioning</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">IoT Product Lifecycle (4 Stages)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>1. Design Stage (Planning)</h4>
+          First &amp; most critical stage. Plan architecture, security, performance. Decisions: make vs buy, integration, scalability.
+        </div>
+        <div class="card">
+          <h4>2. Deployment Stage (Implementation)</h4>
+          PoC → Pilot → Full rollout. Multiple stakeholders. Fast provisioning, access control, large-scale setup.
+        </div>
+        <div class="card">
+          <h4>3. Ongoing Management (Operation)</h4>
+          Longest stage. Remote monitoring, maintenance, updates, optimization. Data-driven decisions without physical visits.
+        </div>
+        <div class="card">
+          <h4>4. Decommissioning (End-of-Life)</h4>
+          Often ignored. Securely remove old devices and onboard new ones. Plan from design stage for smooth transitions.
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:10px;">Example – Smart Electricity Meter: Design → Choose meter/network → Deploy in homes → Monitor billing remotely → Replace old meters</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Scheduling in IoT</div>
+      <ul>
+        <li>Goal: Maximize CPU utilization &amp; throughput; Minimize latency &amp; power consumption</li>
+        <li>Objectives:
+          <ul>
+            <li>Conflict-free time slot assignment</li>
+            <li>Priority based on data rate and delay requirements</li>
+            <li>Duty cycle adjusted based on priority, buffer size, energy, and transmit power</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Resource Management in IoT</div>
+      <ul>
+        <li>Physical resources = IoT nodes identified by URI</li>
+        <li>Resources include: computational, storage, energy, network/communication</li>
+        <li>Efficient management = discovering, identifying, selecting, partitioning, provisioning resources</li>
+        <li>Challenges:
+          <ul>
+            <li>Heterogeneity of IoT resources</li>
+            <li>Dynamic nature of IoT ecosystems</li>
+            <li>Resource-constrained IoT nodes</li>
+            <li>Failures causing performance degradation</li>
+          </ul>
+        </li>
+        <li>Steps: Resource/Service Discovery → Resource Partitioning → Higher Utilization</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Device/Cloud Collaboration</div>
+      <ul>
+        <li>IoT devices collect data → send to cloud → processed &amp; sent back</li>
+        <li>Applications: Smart watches, smart home, smart cities, self-driving cars, thermostats</li>
+        <li>Cloud examples: Antivirus apps, data processing, email, streaming, web conferencing</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 5 ===================== -->
+<div class="unit u5" id="u5">
+  <div class="unit-header">
+    <div class="unit-num">5</div>
+    <div>
+      <h2>Challenges in IoT</h2>
+      <div class="sub">Security · Design · Deployment · Common Challenges &amp; Solutions</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">A. Security Challenges</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>1. Lack of Encryption</h4>
+          IoT devices lack storage/processing of traditional computers. Hackers manipulate protection algorithms. Data transmitted unencrypted.
+        </div>
+        <div class="card">
+          <h4>2. Insufficient Testing &amp; Updating</h4>
+          23B+ devices globally. Manufacturers rush to market. Devices become insecure over time. <strong>Solution:</strong> Proper testing before launch + regular updates.
+        </div>
+        <div class="card">
+          <h4>3. Brute-Forcing &amp; Default Passwords</h4>
+          Mirai Botnet – used default passwords for massive DDoS attacks. Consumers never change default credentials.
+        </div>
+        <div class="card">
+          <h4>4. IoT Malware &amp; Ransomware</h4>
+          Ransomware locks users out of devices using encryption. Hackers hijack cameras, demand ransom. Increases with device count.
+        </div>
+        <div class="card">
+          <h4>5. IoT Botnet → Cryptocurrency</h4>
+          Botnet workers manipulate data privacy in open crypto market. Blockchain itself not vulnerable but app development is.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">B. Design Challenges</div>
+      <div class="grid3">
+        <div class="card"><h4>1. Battery Life</h4>Small chips require low weight &amp; power. Screen sizes growing to fit larger batteries. Battery energy stays same.</div>
+        <div class="card"><h4>2. Cost &amp; Time to Market</h4>Embedded systems cost-constrained. Need optimal design approaches. Bring device to market on time.</div>
+        <div class="card"><h4>3. System Security</h4>Must be robust &amp; reliable. Requires cryptographic algorithms. Secure all components from prototype to deployment.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">C. Deployment Challenges</div>
+      <div class="grid2">
+        <div class="card"><h4>1. Connectivity</h4>Foremost concern. Poor connectivity = challenge for IoT sensors to monitor and supply info.</div>
+        <div class="card"><h4>2. Cross-Platform Capability</h4>Must balance hardware &amp; software. Ensure best performance across all platforms despite heavy device loads.</div>
+        <div class="card"><h4>3. Data Collection &amp; Processing</h4>Data plays important role. Need proper planning for collection, storage, and processing.</div>
+        <div class="card"><h4>4. Lack of Skill Set</h4>Skilled resources needed for IoT development. Right talent = key asset.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Common Development Challenges + Solutions</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Challenge</th><th>Key Point</th></tr>
+          <tr><td>Security</td><td>Not encrypting data, backdoor access, no penetration testing. Engage security experts.</td></tr>
+          <tr><td>Costs</td><td>Infrastructure, updates, maintenance, replacing devices all pile up quickly.</td></tr>
+          <tr><td>Reliability &amp; Hardware</td><td>Quality sensors are expensive. Cheap = unreliable. Regular maintenance needed.</td></tr>
+          <tr><td>Ease of Integration</td><td>Must integrate with platforms, OS, cloud, legacy systems or product fails.</td></tr>
+          <tr><td>Development Skillset</td><td>Multi-domain expertise (security + hardware + IoT) – demand exceeds supply.</td></tr>
+          <tr><td>Quality Control</td><td>Manufacturers rush → insufficient testing → security threats &amp; unreliable devices.</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">How to Overcome Challenges (Checklist)</div>
+      <ol style="padding-left:18px;font-size:14px;">
+        <li>Vet technology partners – expertise, portfolio, automation capabilities</li>
+        <li>Budget for security solutions and experts</li>
+        <li>Research device quality, durability, and reliability</li>
+        <li>If in-house team, budget for right skillsets</li>
+        <li>Ensure frequent and regular updates &amp; maintenance</li>
+        <li>User research is non-negotiable for strong UX</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 6 ===================== -->
+<div class="unit u6" id="u6">
+  <div class="unit-header">
+    <div class="unit-num">6</div>
+    <div>
+      <h2>Domain-Specific Applications of IoT</h2>
+      <div class="sub">Home Automation · Smart Appliances · Healthcare · Industry · Surveillance</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">⭐ Home Automation (PYQ)</div>
+      <div class="grid2">
+        <div>
+          <div class="card" style="margin-bottom:10px;">
+            <h4>Core Components</h4>
+            <ul>
+              <li><strong>Connected Devices</strong> – smart bulbs, thermostats, cameras, locks, appliances</li>
+              <li><strong>Central Hub/App</strong> – brain of system, remote control &amp; automation</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Key Applications</h4>
+            <ul>
+              <li>Lighting Control – remote, scheduling, dimming</li>
+              <li>Climate Control – smart thermostats learn preferences</li>
+              <li>Security Systems – smart locks, motion detectors</li>
+              <li>Appliance Management – remote start/control</li>
+              <li>Entertainment Integration – smart TVs, speakers</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:10px;">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Enhanced Convenience</li>
+              <li>Improved Efficiency (energy optimization)</li>
+              <li>Increased Security</li>
+              <li>Personalized Comfort</li>
+              <li>Streamlined Entertainment</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Considerations</h4>
+            <ul>
+              <li>Compatibility between devices</li>
+              <li>Security (encryption + authentication)</li>
+              <li>Cost (initial + maintenance)</li>
+              <li>Privacy (data usage)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title">⭐ Smart Appliances (PYQ)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>Key Functionalities</h4>
+          <ul>
+            <li>Remote Control &amp; Monitoring (start washing machine remotely)</li>
+            <li>Automated Operations (smart fridge orders groceries)</li>
+            <li>Data Collection &amp; Analysis (usage patterns)</li>
+            <li>Improved Efficiency (adjust water level by load)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Smart Kitchen Example</h4>
+          Voice command → start coffee maker → smart oven preheats → smart fridge analyzes stock → auto grocery order<br><br>
+          <h4>Wireless Protocols Used</h4>
+          Wi-Fi, ZigBee, LTE/5G, LoRa, SigFox, NB-IoT, Bluetooth, ONVIF, KNX, Thread, Z-wave
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title">⭐ Healthcare IoT (PYQ)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>Key Components</h4>
+          <ul>
+            <li>Wearable Devices – smartwatches, fitness trackers, medical sensors</li>
+            <li>Medical Devices – pacemakers, blood glucose monitors</li>
+            <li>Smart Implants – monitor vitals, deliver medication</li>
+            <li>Smart Homes – detect falls, medication reminders</li>
+            <li>Cloud Platforms – secure storage &amp; analysis</li>
+            <li>Mobile Apps – patient access to health data</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Benefits</h4>
+          <ul>
+            <li>Enhanced Remote Patient Monitoring</li>
+            <li>Improved Chronic Disease Management</li>
+            <li>Increased Medication Adherence</li>
+            <li>Personalized Medicine</li>
+            <li>Streamlined Workflow for providers</li>
+            <li>Reduced Hospital Readmissions</li>
+          </ul>
+          <h4 style="margin-top:8px;">Challenges</h4>
+          Security &amp; Privacy, Interoperability, Data Literacy, Cost
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title">⭐ Industry IoT / Machine Diagnosis (PYQ)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>IIoT Key Applications</h4>
+          <ul>
+            <li>Asset Tracking &amp; Monitoring</li>
+            <li>Predictive Maintenance</li>
+            <li>Process Optimization</li>
+            <li>Remote Operations &amp; Control</li>
+            <li>Enhanced Safety &amp; Security</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Machine Diagnosis Process (Predictive Maintenance)</h4>
+          <ol style="padding-left:16px;font-size:13px;">
+            <li>Sensor Data Collection (vibration, temperature, sound)</li>
+            <li>Data Transmission to cloud</li>
+            <li>Data Analysis &amp; Anomaly Detection (ML algorithms)</li>
+            <li>Predictive Maintenance Alerts sent to teams</li>
+            <li>Preventive Maintenance Actions scheduled</li>
+          </ol>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <h4>Benefits of Machine Diagnosis</h4>
+        Reduced Downtime · Lower Maintenance Costs · Improved Asset Lifespan · Enhanced Safety · Optimized Resource Allocation
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title">Surveillance IoT</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>IoT Advantages</h4>
+          <ul>
+            <li>Smart Cameras – facial recognition, anomaly detection</li>
+            <li>Drone Surveillance – large area/disaster zones</li>
+            <li>Smart Access Control – real-time identity check</li>
+            <li>Environmental Monitoring – smoke/gas/temperature sensors</li>
+            <li>Traffic Monitoring – real-time vehicle data</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Benefits &amp; Challenges</h4>
+          <strong>Benefits:</strong> Enhanced Security, Improved Efficiency, Actionable Insights, Remote Management, Scalability<br><br>
+          <strong>Challenges:</strong> Privacy concerns, Data security, Cost, Network reliability, Potential for misuse
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== CHAPTER 7 & 8 ===================== -->
+<div class="unit u78" id="u78">
+  <div class="unit-header">
+    <div class="unit-num">7,8</div>
+    <div>
+      <h2>Developing IoT &amp; IoT Tools</h2>
+      <div class="sub">Raspberry Pi · Arduino · Embedded C · Python Programs</div>
+    </div>
+  </div>
+  <div class="unit-body">
+
+    <div class="section">
+      <div class="section-title">⭐ Raspberry Pi (PYQ)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>Key Features</h4>
+          <ul>
+            <li>Credit-card sized single-board computer</li>
+            <li>ARM Processor – efficient, runs various OS</li>
+            <li>40 GPIO Pins – connect sensors, LEDs, motors</li>
+            <li>HDMI + USB ports</li>
+            <li>Linux Operating System (Raspberry Pi OS)</li>
+            <li>SD card slot, RJ45 Ethernet, 3.5mm AV jack</li>
+            <li>RAM, ROM, Microprocessor on board</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Varieties</h4>
+          <ul>
+            <li><strong>Raspberry Pi 4</strong> – most powerful, suitable for desktop</li>
+            <li><strong>Raspberry Pi Pico</strong> – microcontroller, embedded/smaller projects</li>
+          </ul>
+          <h4 style="margin-top:8px;">Why Use It?</h4>
+          <ul>
+            <li>Affordable vs traditional computers</li>
+            <li>Versatile – many applications</li>
+            <li>Learning platform for programming &amp; electronics</li>
+            <li>Large maker community with tutorials</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">⭐ Arduino Board – Working Principles (PYQ)</div>
+      <div class="grid2">
+        <div class="card">
+          <h4>Hardware Components</h4>
+          <ul>
+            <li><strong>Microcontroller</strong> – tiny computer on chip; reads input, processes, controls output</li>
+            <li><strong>Analog Pins (A0–A5)</strong> – reads analog voltage signals</li>
+            <li><strong>Digital Pins (0–13)</strong> – reads/writes digital HIGH/LOW signals</li>
+            <li><strong>Power Supply</strong> – USB cable or battery pack</li>
+            <li>Voltage regulators, USB connectors, communication interfaces</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Software (Arduino IDE)</h4>
+          <ul>
+            <li>Free, user-friendly IDE</li>
+            <li>Write code in simplified C++</li>
+            <li><code>setup()</code> – runs once, initializes pins</li>
+            <li><code>loop()</code> – runs repeatedly forever</li>
+            <li><code>pinMode(pin, OUTPUT/INPUT)</code></li>
+            <li><code>digitalWrite(pin, HIGH/LOW)</code></li>
+            <li><code>delay(ms)</code> – pause execution</li>
+          </ul>
+          <h4 style="margin-top:8px;">Advantages</h4>
+          Simple &amp; Accessible · Open-source · Scalable &amp; Flexible
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <h4>Workflow: 5 Steps</h4>
+        1. Project Idea → 2. Hardware Selection → 3. Code in Arduino IDE → 4. Upload via USB → 5. Power up &amp; run
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">⭐ Arduino Program: LED Blinking + Buzzer (PYQ)</div>
+      <div class="prog">// Define pins
+const int ledPin = 13;
+const int buzzerPin = 8;  // active-LOW buzzer
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  // LED ON + Buzzer ON
+  digitalWrite(ledPin, HIGH);
+  digitalWrite(buzzerPin, LOW);  // active-LOW = LOW turns ON
+  delay(1000);
+
+  // LED OFF + Buzzer OFF
+  digitalWrite(ledPin, LOW);
+  digitalWrite(buzzerPin, HIGH);
+  delay(1000);
+}</div>
+      <div class="highlight">Key: <code>HIGH</code> = 5V = LED ON. Active-LOW buzzer: <code>LOW</code> = 0V = buzzer ON. <code>delay(1000)</code> = 1 second pause. <code>loop()</code> repeats forever creating blink+beep effect.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">⭐ Embedded C: Room Temperature Sensor (PYQ)</div>
+      <div class="prog">#include &lt;DHT.h&gt;
+
+#define DHTPIN 3       // Digital pin connected to DHT sensor
+#define DHTTYPE DHT22  // DHT 22 (AM2302)
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  delay(2000);  // Wait 2 seconds between readings
+  
+  float temperature = dht.readTemperature();
+  
+  if (isnan(temperature)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println("°C");
+}</div>
+      <div class="highlight"><strong>DHT = Digital Humidity &amp; Temperature sensor.</strong> <code>readTemperature()</code> reads Celsius. <code>isnan()</code> checks if reading is invalid (Not a Number). Serial Monitor displays output at 9600 baud rate.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">⭐ Python: Search Dictionary by Key (PYQ)</div>
+      <div class="prog"># Define a dictionary
+my_dict = {'name': 'John', 'age': 30, 'city': 'New York'}
+
+# Key to search
+key_to_search = 'age'
+
+# Check if key exists
+if key_to_search in my_dict:
+    print(f"Value for '{key_to_search}': {my_dict[key_to_search]}")
+else:
+    print(f"Key '{key_to_search}' does not exist.")</div>
+      <div class="highlight">Uses <code>in</code> operator to check key existence. If found, access with <code>my_dict[key]</code>. Output: <em>Value for 'age': 30</em></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Quick Reference: Arduino vs Raspberry Pi</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Arduino</th><th>Raspberry Pi</th></tr>
+          <tr><td>Type</td><td>Microcontroller board</td><td>Single-board computer</td></tr>
+          <tr><td>OS</td><td>No OS (bare metal)</td><td>Linux (Raspberry Pi OS)</td></tr>
+          <tr><td>Language</td><td>C/C++ (Arduino IDE)</td><td>Python, C, Java, etc.</td></tr>
+          <tr><td>Best For</td><td>Hardware control, real-time tasks</td><td>Complex processing, networking</td></tr>
+          <tr><td>Power</td><td>Very low power</td><td>Higher power than Arduino</td></tr>
+          <tr><td>GPIO</td><td>14 digital + 6 analog pins</td><td>40 GPIO pins</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#666;font-size:13px;">
+  All Units Covered · Good Luck in Your Exam! ⚡
+</div>
+
+</div>
+</body>
+</html>
